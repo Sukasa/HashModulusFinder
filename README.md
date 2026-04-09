@@ -70,6 +70,6 @@ ItemCoalOre = 1
 ItemCobaltOre = 2
 ```
 
-Just like that, we have our two magic constants.  And, as a bonus, you'll know exactly which offsets inside the table correspond to the stock of each ingot!
+Just like that, we have our two magic constants - `INGOT_MODULUS_1` is 199424, and `INGOT_MODULUS_2` is 21.  And, as a bonus, you'll know exactly which offsets inside the table correspond to the stock of each ingot!
 
 That's what this tool does - finds the most optimal modulus operators to allow you to convert a set of known PrefabHashes into memory table addresses with only a handful of lines of code.
