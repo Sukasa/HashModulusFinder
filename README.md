@@ -15,12 +15,12 @@ How is this useful?  Perhaps you want to sum up the quantity of all the smeltabl
 That's where this tool comes in.  Consider the following code:
 
 ```mips
-  move Scratch 102
+  move SlotIdx 102
 
 stock_sum_loop:
-  sub Scratch Scratch 1
-  ls IngotPrefabHash VendingMachine Scratch PrefabHash # Load 
-  breqz Scratch2 _skip_sum_loop # If no prefab hash, skip empty slot
+  sub SlotIdx SlotIdx 1
+  ls IngotPrefabHash VendingMachine SlotIdx PrefabHash # Load 
+  breqz IngotPrefabHash _skip_sum_loop # If no prefab hash, skip empty slot
 
   mod IngotTableIndex IngotPrefabHash INGOT_MODULUS_1
   mod IngotTableIndex IngotTableIndex INGOT_MODULUS_2
@@ -32,7 +32,7 @@ stock_sum_loop:
   poke IngotTableAddress StockAmount
 
 _skip_sum_loop:
-  bgt Scratch 2 stock_sum_loop # Loop through all vending machine item slots, except import/export (0 and 1)
+  bgt SlotIdx 2 stock_sum_loop # Loop through all vending machine item slots, except import/export (0 and 1)
 ```
 
 This code would almost be ideal - it's fast, accurate, and small...  except, you need to know what `INGOT_MODULUS_1` and `INGOT_MODULUS_2` are.  So let's have a look at this tool's output.
