@@ -59,4 +59,4 @@ return;
 // Actual modulus, not remainder, branchless
 int mod(int k, int n) => k % n + (int)(((uint)k & 0x80000000U) >> 31) * n;
 
-int ComputeHash(string Input) => unchecked((int)System.IO.Hashing.Crc32.HashToUInt32(Encoding.ASCII.GetBytes(Input)));
+int ComputeHash(string Input) => int.TryParse(Input, out var val) ? val : unchecked((int)System.IO.Hashing.Crc32.HashToUInt32(Encoding.ASCII.GetBytes(Input)));
