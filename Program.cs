@@ -31,25 +31,30 @@ var TimeTaken = Stopwatch.StartNew();
 more_padding:
 mod_2++;
 
-Parallel.For(mod_2, int.MaxValue, (i, ct) =>
+
+Parallel.ForEach(Partitioner.Create(mod_2, int.MaxValue), range =>
 {
     Span<int> cache = stackalloc int[count];
-
-    if ((i & 0xFFFFFF) == 0)
-        Console.Out.Write('>');
-
-    cache[0] = mod(Hashes[0], i) % mod_2;
-
-    for (var x = 1; x < count; x++)
+    var j = range.Item2;
+    
+    for (var i = range.Item1; mod_1 == 0 && i < j; i++)
     {
-        cache[x] = mod(Hashes[x], i) % mod_2;
-        for (var y = x - 1; y >= 0; y--)
-            if (cache[x] == cache[y])
-                return;
-    }
+        if ((i & 0xFFFFFF) == 0)
+            Console.Out.Write('>');
 
-    mod_1 = i;
-    ct.Break(); // We found a solution - end search after saving the answer
+        cache[0] = mod(Hashes[0], i) % mod_2;
+
+        for (var x = 1; x < count; x++)
+        {
+            cache[x] = mod(Hashes[x], i) % mod_2;
+            for (var y = x - 1; y >= 0; y--)
+                if (cache[x] == cache[y])
+                    goto next_iter;
+        }
+
+        mod_1 = i;
+        next_iter: ;
+    }
 });
 
 if (mod_1 == 0)
