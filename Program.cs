@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 // ReSharper disable AccessToModifiedClosure - Closure not modified during parallel execution
@@ -79,6 +81,8 @@ return 0;
 
 
 // Actual modulus, not remainder, branchless
+
+[MethodImpl(MethodImplOptions.AggressiveInlining)]
 int mod(int k, int n) => k % n + (int)(((uint)k & 0x80000000U) >> 31) * n;
 
 int ComputeHash(string Input) => int.TryParse(Input, out var val) ? val : unchecked((int)System.IO.Hashing.Crc32.HashToUInt32(Encoding.ASCII.GetBytes(Input)));
