@@ -19,7 +19,7 @@ if (count < 2)
 }
 
 for (var x = 0; x < count - 1; x++)
-for (var y = x; y < count; y++)
+for (var y = x + 1; y < count; y++)
     if (Hashes[y] == Hashes[x])
     {
         Console.Error.WriteLine("Two or more of the supplied hashes are identical and cannot be disambiguated");
