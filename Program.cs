@@ -28,7 +28,7 @@ for (var y = x + 1; y < count; y++)
         return -1;
     }
 
-Console.Out.WriteLine($"Searching for double-modulus pair for {Hashes.Count}-hash table index conversion");
+Console.Out.Write($"Searching for double-modulus pair for {Hashes.Count}-hash table index conversion");
 var TimeTaken = Stopwatch.StartNew();
 more_padding:
 mod_2++;
@@ -37,12 +37,11 @@ mod_2++;
 Parallel.ForEach(Partitioner.Create(mod_2, int.MaxValue), range =>
 {
     Span<int> cache = stackalloc int[count];
-    var j = range.Item2;
     
-    for (var i = range.Item1; mod_1 == 0 && i < j; i++)
+    for (var i = range.Item1; mod_1 == 0 && i < range.Item2; i++)
     {
         if ((i & 0xFFFFFF) == 0)
-            Console.Out.Write('>');
+            Console.Out.Write('.');
 
         cache[0] = mod(Hashes[0], i) % mod_2;
 
@@ -51,7 +50,7 @@ Parallel.ForEach(Partitioner.Create(mod_2, int.MaxValue), range =>
             cache[x] = mod(Hashes[x], i) % mod_2;
             for (var y = x - 1; y >= 0; y--)
                 if (cache[x] == cache[y])
-                    goto next_iter;
+                    goto next_iter; // Continue outermost for loop, as this i results in a hash collision
         }
 
         mod_1 = i;
@@ -62,15 +61,15 @@ Parallel.ForEach(Partitioner.Create(mod_2, int.MaxValue), range =>
 if (mod_1 == 0)
 {
     Console.Out.WriteLine();
-    Console.Out.WriteLine($"No modulus found for table size {mod_2}, adding sparsity.");
+    Console.Out.Write($"No modulus found for table size {mod_2}, adding sparsity.");
     goto more_padding;
 }
 
 TimeTaken.Stop();
 
 Console.Out.WriteLine();
-Console.Out.WriteLine($"Smallest double-modulus to ensure unique table indices for {Hashes.Count} hashes: {mod_1}");
-Console.Out.WriteLine($"Fit into data table length set by 2nd modulus {mod_2}");
+Console.Out.WriteLine($"Found Modulus pair for {Hashes.Count} hash se.  First modulus: {mod_1}");
+Console.Out.WriteLine($"Use table size matching second modulus: {mod_2}");
 Console.Out.WriteLine($"Took {TimeTaken.ElapsedMilliseconds} ms");
 Console.Out.WriteLine();
 
